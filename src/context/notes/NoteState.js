@@ -5,7 +5,7 @@ import NoteContext from "./NoteContext";
 
 const NoteState = (props) => {
 
-    const host = "http://localhost:6500"
+    const host = "https://shorten-url11.herokuapp.com";
 
 
 

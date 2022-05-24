@@ -11,7 +11,7 @@ const Signup = (props) => {
         element.preventDefault();
         //fetch("localhost:6500/api/auth/login")
         const { name, email, password } = credentials;
-        const response = await fetch("http://localhost:6500/api/auth/createuser/", {
+        const response = await fetch("https://shorten-url11.herokuapp.com/api/auth/createuser/", {
 
 
             method: 'POST',

@@ -10,7 +10,7 @@ const Login = (props) => {
 
         element.preventDefault();
         //fetch("localhost:6500/api/auth/login")
-        const response = await fetch("http://localhost:6500/api/auth/login", {
+        const response = await fetch("https://shorten-url11.herokuapp.com/api/auth/login", {
             method: 'POST',
 
             headers: {
