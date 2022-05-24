@@ -1,21 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext } from "react";
 
-import Table from './Table'
+import AllURLs from "./AllURLs";
 
 const Home = (props) => {
+  const { showAlert } = props;
 
-    const {showAlert}= props
+  return <AllURLs showAlert={showAlert} />;
+};
 
-
-    return (
-
-
-
-        <Table showAlert={showAlert} />
-
-
-
-    )
-}
-
-export default Home
+export default Home;

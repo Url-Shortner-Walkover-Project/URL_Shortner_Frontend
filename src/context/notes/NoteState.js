@@ -1,75 +1,52 @@
 import React, { useState } from "react";
 import NoteContext from "./NoteContext";
 
-
-
 const NoteState = (props) => {
+  const host = "https://shorten-url11.herokuapp.com";
 
-    const host = "https://shorten-url11.herokuapp.com";
+  const notesInitial = [];
 
+  const [notes, setNotes] = useState(notesInitial);
 
+  //Add a Note
 
-    const notesInitial = [];
+  const addNote = async (fullurl) => {
+    ///Api call
+    getNotes();
+    const response = await fetch(`${host}/adddata/short`, {
+      method: "POST",
 
-    const [notes, setNotes] = useState(notesInitial)
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": localStorage.getItem("token"),
+      },
+      body: JSON.stringify({ fullUrl: fullurl }),
+    });
+    const note = response.json();
+    setNotes(notes.concat(note));
+  };
 
+  // Get a note function
+  const getNotes = async () => {
+    const response = await fetch(`${host}/fetchdata`, {
+      method: "GET",
 
-    //Add a Note
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": localStorage.getItem("token"),
+      },
+    });
 
-    const addNote = async(fullurl) => {
+    const json = await response.json();
 
-        ///Api call
-        getNotes();
-        const response = await fetch(`${host}/adddata/short`, {
-            method: 'POST',
+    setNotes(json);
+  };
 
-            headers: {
-                'Content-Type': 'application/json',
-                "auth-token": localStorage.getItem('token')
+  return (
+    <NoteContext.Provider value={{ notes, setNotes, addNote, getNotes }}>
+      {props.children}
+    </NoteContext.Provider>
+  );
+};
 
-            },
-            body: JSON.stringify({fullUrl:fullurl})
-        });
-        const note = response.json();
-       setNotes(notes.concat(note))
-
-
-    }
-
-    // Get a note function
-    const getNotes=async()=>{
-
-        const response = await fetch(`${host}/fetchdata`, {
-            method: 'GET',
-
-            headers: {
-                'Content-Type': 'application/json',
-                "auth-token": localStorage.getItem('token')
-
-            },
-           
-        });
-
-        const json = await response.json();
-
-        setNotes(json)
-
-    }
-
-
-
-    return (
-        <NoteContext.Provider value={{ notes, setNotes, addNote,getNotes }} >
-
-            {props.children}
-
-        </NoteContext.Provider>
-    )
-
-
-
-
-}
-
-
-export default NoteState
+export default NoteState;

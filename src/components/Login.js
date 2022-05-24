@@ -1,72 +1,126 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const Login = (props) => {
+  const theme = createTheme();
 
-    const [credentials, setCredentials] = useState({ email: "", password: "" })
-    let navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    const handleSubmit = async (element) => {
+  let navigate = useNavigate();
 
-        element.preventDefault();
-        //fetch("localhost:6500/api/auth/login")
-        const response = await fetch("https://shorten-url11.herokuapp.com/api/auth/login", {
-            method: 'POST',
+  const handleSubmit = async (element) => {
+    element.preventDefault();
+    //fetch("localhost:6500/api/auth/login")
+    const response = await fetch(
+      "https://shorten-url11.herokuapp.com/api/auth/login",
+      {
+        method: "POST",
 
-            headers: {
-                'Content-Type': 'application/json',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: email, password: password }),
+      }
+    );
 
+    const json = await response.json();
 
-            },
-            body: JSON.stringify({ email: credentials.email, password: credentials.password })
-
-        });
-
-        const json = await response.json();
-        
-        if (json.success) {
-            localStorage.setItem('token', json.authtoken);
-            navigate("/")
-            props.showAlert(" Login Successfully","success")
-            //redirect
-        } else {
-
-            props.showAlert("Invalid credentials","danger")
-        }
-
-
-
+    if (json.success) {
+      localStorage.setItem("token", json.authtoken);
+      navigate("/");
+      props.showAlert(" Login Successfully", "success");
+      //redirect
+    } else {
+      props.showAlert("Invalid credentials", "danger");
     }
-    const onChange = (e) => {
+  };
 
+  return (
+    <>
+      <ThemeProvider theme={theme}>
+        <Container component="main" maxWidth="xs">
+          <CssBaseline />
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+              <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+              Sign In
+            </Typography>
+            <Box
+              component="form"
+              onSubmit={handleSubmit}
+              noValidate
+              sx={{ mt: 1 }}
+            >
+              <TextField
+                onChange={(e) => setEmail(e.target.value)}
+                margin="normal"
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                autoComplete="email"
+                autoFocus
+              />
+              <TextField
+                onChange={(e) => setPassword(e.target.value)}
+                margin="normal"
+                required
+                fullWidth
+                name="password"
+                label="Password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+              <FormControlLabel
+                control={<Checkbox value="remember" color="primary" />}
+                label="Remember me"
+              />
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign In
+              </Button>
+              <Grid container>
+                <Grid item xs></Grid>
+                <Grid item>
+                  <Link href="/signup" variant="body2">
+                    {"Does'nt have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+        </Container>
+      </ThemeProvider>
+    </>
+  );
+};
 
-        setCredentials({ ...credentials, [e.target.name]: e.target.value })
-
-
-
-
-    }
-    return (
-        <>
-            <div className="container my-2">
-
-                <h2 className='text-center'>Login to your Account</h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-3">
-                        <label htmlFor="email" className="form-label">Email address</label>
-                        <input type="email" className="form-control" id="email" name='email' value={credentials.email} onChange={onChange} aria-describedby="emailHelp" />
-                        <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="password" className="form-label">Password</label>
-                        <input type="password" className="form-control" value={credentials.password} onChange={onChange} id="password" name='password' />
-                    </div>
-
-                    <button type="submit" className="btn btn-primary" >Submit</button>
-                </form>
-            </div>
-        </>
-    )
-}
-
-export default Login
+export default Login;
